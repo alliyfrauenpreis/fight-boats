@@ -65,7 +65,6 @@ public class GameBoard {
                 boardValues.get(piecePositions.get(i).getRow()-1).add(piecePositions.get(i).getCol()-1,1);
             }
 
-            printDebugBoard();
         } else {
             
             System.out.println("piece improperly set!");

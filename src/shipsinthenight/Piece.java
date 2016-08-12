@@ -56,6 +56,70 @@ public class Piece {
         }
     }
     
+    // sets piece that has at least its origin point and direction set as first two positions
+    public void autoSetPositions(){
+        
+        if (position.size() < 2){
+            
+            System.out.println("Piece does not have enough positions to be set");
+            
+        } else { 
+            
+            
+            Position origin = position.get(0);
+            Position next = position.get(1);
+            
+            position.clear();
+            
+            if (origin.getRow() < next.getRow()){
+                
+                System.out.println("down");
+                // going down
+                
+                for (int i = 1; i <= size; i++){
+                    System.out.println(i);
+                    position.add(new Position(origin.getRow()+1, origin.getCol()));
+                }
+                
+            } else if (origin.getRow() > next.getRow()) {
+                
+                
+                System.out.println("up");
+                // going up
+                
+                for (int i = 1; i <= size; i++){
+                    
+                    position.add(new Position(origin.getRow()-1,origin.getCol()));
+                }
+                
+            } else if (origin.getCol() < next.getCol()){
+                
+                
+                System.out.println("right");
+                // going right
+                for (int i = origin.getCol(); i <= size+1; i++){
+                    
+                    position.add(new Position(origin.getRow(),origin.getCol()+1));
+                }
+                
+                
+            } else if (origin.getCol() > next.getCol()) {
+                
+                
+                System.out.println("left");
+                // going left
+                for (int i = origin.getCol(); i <= size; i++){
+                    
+                    position.add(new Position(origin.getRow(),origin.getCol()-1));
+                }
+            }
+        
+            
+            
+            
+        }
+    }
+    
     public void addHit(){
         
         hits = hits + 1;

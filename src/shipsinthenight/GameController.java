@@ -27,14 +27,28 @@ public class GameController {
     public void setupGame(){
         
         
+        
         GameBoard board = new GameBoard();
         Piece patrol = new Piece(shipsinthenight.pieceType.PATROL);
-        patrol.addPosition(new Position(1,1));
-        patrol.addPosition(new Position(1,2));
-        board.addPiece(patrol);
-        board.addHit(new Position(1,1));
-        board.addHit(new Position(1,2));
+        Piece airCarrier = new Piece(shipsinthenight.pieceType.AIR_CARRIER);
+        Piece battleship = new Piece(shipsinthenight.pieceType.BATTLESHIP);
+        Piece destroyer = new Piece(shipsinthenight.pieceType.DESTROYER);
+        Piece sub = new Piece(shipsinthenight.pieceType.SUB);
         
+        
+        airCarrier.addPosition(new Position(3,1));  
+        airCarrier.addPosition(new Position(4,1));  
+        
+        airCarrier.autoSetPositions();
+        
+        board.addPiece(airCarrier);
+//                
+//        board.addPiece(airCarrier);
+//        board.addHit(new Position(3,1));
+//        board.addHit(new Position(3,2));
+//        
+        
+        board.printDebugBoard();
         
     }
     

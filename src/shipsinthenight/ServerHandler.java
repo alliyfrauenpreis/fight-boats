@@ -17,6 +17,17 @@ import java.util.ArrayList;
 public class ServerHandler {
     
     public boolean playersTurn;
+    public DiscoveryThread thread = new DiscoveryThread();
+    
+    public ServerHandler(){
+        
+        
+    }
+    
+    public void start(){
+        
+        thread.run();
+    }
     
     public void startNewGame(){}
     
@@ -28,3 +39,6 @@ public class ServerHandler {
     
     
 }
+
+
+// http://michieldemey.be/blog/network-discovery-using-udp-broadcast/
