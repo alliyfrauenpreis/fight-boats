@@ -24,30 +24,17 @@ public class GameBoard {
         
         // create a new list of lists that represents board
         // 0 means no piece, 1 means piece
-        
         boardValues = new ArrayList();
         
-        for (int i = 0; i < 10; i++){
+        for (int i = 0; i <= 9; i++){
             
             ArrayList thisRow = new ArrayList();
-            for (int j = 0; j < 10; j++){
+            for (int j = 0; j <= 9; j++){
                 
                 thisRow.add(j, 0);
             }
             boardValues.add(i,thisRow);
         }
-        
-//        for (int x = 0; x < 10; x++){
-//            
-//            for (int y = 0; y < 10; y++){
-//                
-//                System.out.print(boardValues.get(x).get(y) + " ");
-//            }
-//            
-//            
-//                System.out.println("");
-//        }
-        
         
     }
     
@@ -61,8 +48,15 @@ public class GameBoard {
             ArrayList<Position> piecePositions = piece.getPositions();
 
             for (int i = 0; i < piecePositions.size(); i++){
-
-                boardValues.get(piecePositions.get(i).getRow()-1).add(piecePositions.get(i).getCol()-1,1);
+                
+                int row = piecePositions.get(i).getRow();
+                int col = piecePositions.get(i).getCol();
+                
+                // get the current row, update the column
+                ArrayList rowList = boardValues.get(row);
+                rowList.set(col, 1);
+                
+                
             }
 
         } else {
@@ -76,7 +70,12 @@ public class GameBoard {
     public boolean addHit(Position pos){
         
         
-        boardValues.get(pos.getRow()-1).add(pos.getCol()-1,-1);
+         int row = pos.getRow();
+         int col = pos.getCol();
+                
+         ArrayList rowList = boardValues.get(row);
+         rowList.set(col, -1);
+         
         
         // check all the pieces to add hit & check for sinking
         for (Piece p : pieces){
@@ -91,13 +90,14 @@ public class GameBoard {
                 }
             }
         }
+        printDebugBoard();
         return false;
     }
     
     // checks if space is occupied; returns 1 if so, 0 otherwise
     public int checkSpace(Position pos){
         
-         if ((int) boardValues.get(pos.getRow()-1).get(pos.getCol()-1) == 1){
+         if ((int) boardValues.get(pos.getRow()).get(pos.getCol()) == 1){
              
             return 1;
             
@@ -124,13 +124,16 @@ public class GameBoard {
     // prints representation of board to console; 1 for occupied, 0 for empty, -1 for sunk
     void printDebugBoard(){
         
-        for (int x = 0; x < 10; x++){
+        
+        
+        for (int x = 0; x <= 9; x++){
             
-            for (int y = 0; y < 10; y++){
+            for (int j = 0; j <= 9; j++){
                 
-                System.out.print(boardValues.get(x).get(y) + " ");
+                System.out.print(boardValues.get(x).get(j) + " ");
             }
-                System.out.println("");
+            
+            System.out.println("");
         }
         
     }

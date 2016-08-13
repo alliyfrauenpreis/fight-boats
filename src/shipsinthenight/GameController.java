@@ -35,18 +35,28 @@ public class GameController {
         Piece destroyer = new Piece(shipsinthenight.pieceType.DESTROYER);
         Piece sub = new Piece(shipsinthenight.pieceType.SUB);
         
-        
-        airCarrier.addPosition(new Position(3,1));  
-        airCarrier.addPosition(new Position(4,1));  
-        
-        airCarrier.autoSetPositions();
-        
-        board.addPiece(airCarrier);
-//                
-//        board.addPiece(airCarrier);
-//        board.addHit(new Position(3,1));
-//        board.addHit(new Position(3,2));
 //        
+       airCarrier.addPosition(new Position(5,8));  
+        airCarrier.addPosition(new Position(4,8));  
+       airCarrier.addPosition(new Position(3,8)); 
+        airCarrier.addPosition(new Position(2,8)); 
+       airCarrier.addPosition(new Position(1,8)); 
+       
+       board.addHit(new Position(5,8)); 
+       board.addHit(new Position(4,8));  
+       board.addHit(new Position(3,8));  
+       board.addHit(new Position(2,8));  
+       board.addHit(new Position(1,8));  
+       
+        
+//        
+//        airCarrier.addPosition(new Position(2,1));
+//        airCarrier.addPosition(new Position(3,1));
+//        airCarrier.addPosition(new Position(4,1));
+//        airCarrier.addPosition(new Position(5,1));
+//        airCarrier.addPosition(new Position(6,1));
+//        
+        board.addPiece(airCarrier);
         
         board.printDebugBoard();
         

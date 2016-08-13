@@ -57,7 +57,7 @@ public class Piece {
     }
     
     // sets piece that has at least its origin point and direction set as first two positions
-    public void autoSetPositions(){
+  /*  public void autoSetPositions(){
         
         if (position.size() < 2){
             
@@ -68,58 +68,62 @@ public class Piece {
             
             Position origin = position.get(0);
             Position next = position.get(1);
+            int row = origin.getRow();
+            int col = origin.getCol();
             
             position.clear();
             
             if (origin.getRow() < next.getRow()){
                 
-                System.out.println("down");
                 // going down
                 
+                System.out.println("down");
                 for (int i = 1; i <= size; i++){
-                    System.out.println(i);
-                    position.add(new Position(origin.getRow()+1, origin.getCol()));
+                    
+                    position.add(new Position(row, origin.getCol()));
+                    row += 1;
                 }
                 
             } else if (origin.getRow() > next.getRow()) {
                 
-                
-                System.out.println("up");
                 // going up
                 
+                System.out.println("up");
                 for (int i = 1; i <= size; i++){
                     
-                    position.add(new Position(origin.getRow()-1,origin.getCol()));
+                    position.add(new Position(row,origin.getCol()));
+                    row = row - 1;
                 }
                 
             } else if (origin.getCol() < next.getCol()){
                 
                 
-                System.out.println("right");
                 // going right
-                for (int i = origin.getCol(); i <= size+1; i++){
+                System.out.println("right");
+                for (int i = 1; i <= size; i++){
                     
-                    position.add(new Position(origin.getRow(),origin.getCol()+1));
+                    position.add(new Position(origin.getRow(),col));
+                    col+=1;
                 }
                 
                 
             } else if (origin.getCol() > next.getCol()) {
                 
                 
-                System.out.println("left");
                 // going left
-                for (int i = origin.getCol(); i <= size; i++){
+                
+                System.out.println("left");
+                for (int i = 1; i <= size; i++){
                     
-                    position.add(new Position(origin.getRow(),origin.getCol()-1));
+                    position.add(new Position(origin.getRow(),col));
+                    System.out.println("col" + col);
+                    System.out.println("row" + origin.getRow());
+                    col = col - 1;
                 }
             }
-        
-            
-            
-            
         }
     }
-    
+    */
     public void addHit(){
         
         hits = hits + 1;
@@ -174,5 +178,12 @@ public class Piece {
     }
     
     
-    
+    public void printPositions(){
+        
+        
+        for (Position p: position){
+            
+            System.out.println("Row: " + p.getRow() + ", column: " + p.getCol());
+        }
+    }
 }
