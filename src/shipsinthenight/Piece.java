@@ -177,7 +177,6 @@ public class Piece {
         }
     }
     
-    
     public void printPositions(){
         
         

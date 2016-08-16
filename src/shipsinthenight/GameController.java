@@ -12,58 +12,135 @@
 
 package shipsinthenight;
 
+import javax.swing.JPanel;
 import shipsinthenight.GameBoard;
 
 public class GameController {
     
+    private static GameController instance = null;
+    
     GameBoard playerBoard, opponentBoard;
+    Position selected = null;
+    PopupController popupController;
+    ShipsInTheNight appController;
     
     public GameController(){
         
         
     }
     
+    public static GameController getInstance(){
+        
+        if (instance == null){
+            instance = new GameController();
+        }
+        return instance;
+    }
     
-    public void setupGame(){
+    
+    public void setupGame(ShipsInTheNight s){
         
-        
-        
-        GameBoard board = new GameBoard();
+        playerBoard = new GameBoard();
+        opponentBoard = new GameBoard();
+        popupController = new PopupController();
+        appController = s;
         Piece patrol = new Piece(shipsinthenight.pieceType.PATROL);
         Piece airCarrier = new Piece(shipsinthenight.pieceType.AIR_CARRIER);
         Piece battleship = new Piece(shipsinthenight.pieceType.BATTLESHIP);
         Piece destroyer = new Piece(shipsinthenight.pieceType.DESTROYER);
         Piece sub = new Piece(shipsinthenight.pieceType.SUB);
         
-//        
        airCarrier.addPosition(new Position(5,8));  
         airCarrier.addPosition(new Position(4,8));  
        airCarrier.addPosition(new Position(3,8)); 
         airCarrier.addPosition(new Position(2,8)); 
        airCarrier.addPosition(new Position(1,8)); 
        
-       board.addHit(new Position(5,8)); 
-       board.addHit(new Position(4,8));  
-       board.addHit(new Position(3,8));  
-       board.addHit(new Position(2,8));  
-       board.addHit(new Position(1,8));  
+       patrol.addPosition(new Position(2,2));
+       patrol.addPosition(new Position(2,3));
+       
+       battleship.addPosition(new Position(7,1));
+       battleship.addPosition(new Position(7,2));
+       battleship.addPosition(new Position(7,3));
+       battleship.addPosition(new Position(7,4));
+       
+       
+        playerBoard.addPiece(airCarrier);
+        playerBoard.addPiece(patrol);
+        playerBoard.addPiece(battleship);
+        
+        
+        Piece patrol2 = new Piece(shipsinthenight.pieceType.PATROL);
+        Piece airCarrier2 = new Piece(shipsinthenight.pieceType.AIR_CARRIER);
+        
+       airCarrier2.addPosition(new Position(5,8));  
+        airCarrier2.addPosition(new Position(4,8));  
+       airCarrier2.addPosition(new Position(3,8)); 
+        airCarrier2.addPosition(new Position(2,8)); 
+       airCarrier2.addPosition(new Position(1,8)); 
+       
+       patrol2.addPosition(new Position(2,2));
+       patrol2.addPosition(new Position(2,3));
+       
+       battleship.addPosition(new Position(7,1));
+       battleship.addPosition(new Position(7,2));
+       battleship.addPosition(new Position(7,3));
+       battleship.addPosition(new Position(7,4));
        
         
-//        
-//        airCarrier.addPosition(new Position(2,1));
-//        airCarrier.addPosition(new Position(3,1));
-//        airCarrier.addPosition(new Position(4,1));
-//        airCarrier.addPosition(new Position(5,1));
-//        airCarrier.addPosition(new Position(6,1));
-//        
-        board.addPiece(airCarrier);
+       
+        playerBoard.addPiece(airCarrier);
+        playerBoard.addPiece(patrol);
+        playerBoard.addPiece(battleship);
         
-        board.printDebugBoard();
+        opponentBoard.addPiece(patrol2);
+        opponentBoard.addPiece(airCarrier2);
+        
+        for (int i = 0; i < 10; i++){
+            for (int j = 0; j < 10; j++){
+                playerBoard.boardButtons[i][j].setEnabled(false);
+            }
+        }
+        
+        
+        playerBoard.printDebugBoard();
         
     }
     
-    public void displayBoards(){
+    public JPanel getPlayerBoardPanel(){
         
+        return playerBoard.getBoard();
+    }
+    
+     public JPanel getOpponentBoardPanel(){
+        
+        return opponentBoard.getBoard();
+    }
+    
+    public void sendAttack(){
+        
+        // get the selected position on the opponent board
+        Position target = opponentBoard.selected;
+        boolean sunk = opponentBoard.addHit(target);
+        if (sunk){
+            if (opponentBoard.win()){
+                popupController.launchWinPopup();
+                appController.returnToStartScreen();
+            } else {
+                popupController.launchSinkPopup(target);
+            }
+        } else if (opponentBoard.checkSpace(target) == 1){
+            popupController.launchHitPopup(target);
+        } else {
+            popupController.launchMissPopup(target);
+        }
+
+        
+    }
+    
+    public void quitGame(){
+        
+        appController.quitGame();
     }
     
 }
