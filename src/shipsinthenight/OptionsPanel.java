@@ -8,6 +8,7 @@ package shipsinthenight;
 /**
  *
  * @author allisonfrauenpreis
+ * This class handles the panel of buttons for things like fire, quit, etc.
  */
 
 
@@ -18,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import shipsinthenight.GameBoard;
 
+// SINGLETON CLASS
 public class OptionsPanel {
     
     JPanel panel;
@@ -60,6 +62,7 @@ public class OptionsPanel {
     
 }
 
+// listener for button to launch attack
 class FireButtonListener implements ActionListener {
 
     @Override
@@ -72,13 +75,13 @@ class FireButtonListener implements ActionListener {
     
     public FireButtonListener(){
         
-        
-        
-        
+      
     }
     
 }
 
+// listener for button to quit game
+// TODO: add "are you sure" message
 class QuitButtonListener implements ActionListener{
 
     

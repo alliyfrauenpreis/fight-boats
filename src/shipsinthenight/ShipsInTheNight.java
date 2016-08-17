@@ -8,13 +8,18 @@ import java.util.ArrayList;
 import javax.swing.*;
 import static javax.swing.SwingConstants.CENTER;
 
+/**
+ *
+ * @author allisonfrauenpreis
+ * This is the main app class, where all panels and controllers are created and laid out.
+ */
+
 public class ShipsInTheNight {
 
     JFrame         mainFrame = new JFrame();
     JPanel         mainPanel = new JPanel();
     JTextField     textField = new JTextField();
     JButton        startButton = new JButton();
-    ServerHandler  serverHandler = new ServerHandler();
     GameController gameController = GameController.getInstance();
     JLabel         title, subtitle, pBoardLabel, oBoardLabel;
     
@@ -34,7 +39,6 @@ public class ShipsInTheNight {
         s.pBoardLabel = new JLabel("Your Board");
         s.oBoardLabel = new JLabel("Opponent's Board");
         s.textField.setMinimumSize(new Dimension(200,50));
-//        s.mainPanel.add(s.textField);
         s.mainPanel.add(s.startButton);
         s.mainPanel.setBorder((BorderFactory.createEmptyBorder(20, 30, 30, 20)));
         s.mainFrame.add(s.mainPanel);
@@ -57,7 +61,6 @@ public class ShipsInTheNight {
         mainPanel.add(pBoardLabel);
         mainPanel.add(gameController.getPlayerBoardPanel());
         mainPanel.add(options.getPanel());
-        mainPanel.setMinimumSize(new Dimension(200,900));
         mainFrame.add(mainPanel);
         mainFrame.pack();
         mainFrame.setVisible(true);

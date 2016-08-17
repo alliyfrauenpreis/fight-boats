@@ -12,9 +12,9 @@ import java.util.ArrayList;
 /**
  *
  * @author allisonfrauenpreis
+ * This class handles error-checking for each piece type as well as checking if a piece is sunk and where it is placed.
  */
 public class Piece {
-    
     
     
     private int size;
@@ -24,7 +24,7 @@ public class Piece {
     public boolean sunk = false;
   
     
-    
+    // create a new piece with default values
     public Piece(pieceType pType){
        
         type = pType;
@@ -34,6 +34,7 @@ public class Piece {
         
     }
     
+    // set up piece size based on game rules
     public void setup(){
         
         switch (type){
@@ -124,6 +125,8 @@ public class Piece {
         }
     }
     */
+    
+    // adds marker to piece
     public void addHit(){
         
         hits = hits + 1;
@@ -166,6 +169,7 @@ public class Piece {
         position.add(pos);
     }
     
+    // checks if all positions in piece are set
     public boolean isSet(){
         
         if (position.size() == size){

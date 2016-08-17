@@ -7,6 +7,7 @@
 /**
  *
  * @author allisonfrauenpreis
+ * This class handles general game setup including laying out boards and processing attacks.
  */
 
 
@@ -15,6 +16,7 @@ package shipsinthenight;
 import javax.swing.JPanel;
 import shipsinthenight.GameBoard;
 
+// SINGLETON CLASS
 public class GameController {
     
     private static GameController instance = null;
@@ -38,6 +40,7 @@ public class GameController {
     }
     
     
+    // setup a new game with dummy content for now, and two boards
     public void setupGame(ShipsInTheNight s){
         
         playerBoard = new GameBoard();
@@ -64,11 +67,9 @@ public class GameController {
        battleship.addPosition(new Position(7,3));
        battleship.addPosition(new Position(7,4));
        
-       
         playerBoard.addPiece(airCarrier);
         playerBoard.addPiece(patrol);
         playerBoard.addPiece(battleship);
-        
         
         Piece patrol2 = new Piece(shipsinthenight.pieceType.PATROL);
         Piece airCarrier2 = new Piece(shipsinthenight.pieceType.AIR_CARRIER);
@@ -87,7 +88,6 @@ public class GameController {
        battleship.addPosition(new Position(7,3));
        battleship.addPosition(new Position(7,4));
        
-        
        
         playerBoard.addPiece(airCarrier);
         playerBoard.addPiece(patrol);
@@ -96,12 +96,12 @@ public class GameController {
         opponentBoard.addPiece(patrol2);
         opponentBoard.addPiece(airCarrier2);
         
+        // disable your own board because you can only attack opponent
         for (int i = 0; i < 10; i++){
             for (int j = 0; j < 10; j++){
                 playerBoard.boardButtons[i][j].setEnabled(false);
             }
         }
-        
         
         playerBoard.printDebugBoard();
         
@@ -122,6 +122,10 @@ public class GameController {
         // get the selected position on the opponent board
         Position target = opponentBoard.selected;
         boolean sunk = opponentBoard.addHit(target);
+        
+        // TODO: send over socket
+        
+        // launch popup depending on result of attack
         if (sunk){
             if (opponentBoard.win()){
                 popupController.launchWinPopup();

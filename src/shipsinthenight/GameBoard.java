@@ -21,7 +21,12 @@ import javax.swing.border.LineBorder;
 /**
  *
  * @author allisonfrauenpreis
+ * additional credit for some code to: http://stackoverflow.com/questions/21077322/create-a-chess-board-with-jpanel
+ * 
+ * This class handles the data and the GUI of the opponent and player boards.
+ * In a future release, the data and the GUI components may be separated to better reflect the MVC paradigm.
  */
+
 public class GameBoard {
     
     ArrayList<ArrayList> boardValues;
@@ -42,26 +47,27 @@ public class GameBoard {
         boardPanel.setBorder(new EmptyBorder(20,20,20,20));
         boardValues = new ArrayList();
         
+        // below is pulled from SO link (see comments above)
         Insets margin = new Insets(0,0,0,0);
-//        
         
-        
+        // add top indexes
         for (int i = 1; i <= 10; i++){
             boardPanel.add(new JLabel(String.valueOf(i), SwingConstants.CENTER));   
         }
         
         
-        
+        // create rows and columns
         for (int i = 0; i <= 9; i++){
             
             ArrayList thisRow = new ArrayList();
             
             for (int j = 0; j <= 9; j++){
                 
+                // below is pulled in part from SO link (see comments above)
                 thisRow.add(j, 0);
                 JButton button = new JButton();
                 button.setMargin(margin);
-                ImageIcon imageIcon = new ImageIcon(new BufferedImage(30, 30, BufferedImage.TYPE_INT_ARGB));
+                ImageIcon imageIcon = new ImageIcon(new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB));
                 button.setIcon(imageIcon);
                 button.setBorder(new LineBorder(Color.BLACK, 2));
                 button.addActionListener(new BoardButtonListener(i, j, button, this));
@@ -70,7 +76,6 @@ public class GameBoard {
                 
             }
             
-            
             boardValues.add(i,thisRow);
             
         }
@@ -78,12 +83,13 @@ public class GameBoard {
         boardPanel.setMinimumSize(new Dimension(400,500));
     }
     
+    // getter for the GUI board
     public JPanel getBoard(){
         
         return boardPanel;
     }
     
-    // adds a piece to the position that the piece holds
+    // adds a piece to the positions that the piece holds
     void addPiece(Piece piece){
         
         if (piece.isSet()){
@@ -135,8 +141,8 @@ public class GameBoard {
                 if (p.sunk == true){
                     
                     System.out.println("SINK!");
-                    // set this piece's spaces to all yellow
                     
+                    // set this piece's spaces to all yellow
                     for (Position piecePosition : p.position){
                         
                         boardButtons[piecePosition.row][piecePosition.column].setBorder(new LineBorder(Color.YELLOW,2));
@@ -176,27 +182,7 @@ public class GameBoard {
          
     }
     
-    public void update(){
-        
-         for (int i = 0; i <= 9; i++){
-            
-            ArrayList thisRowData = new ArrayList();
-            JButton [] thisRowGUI = new JButton [10];
-            
-                thisRowData = boardValues.get(i);
-                thisRowGUI = boardButtons[i];
-                
-             
-            for (int j = 0; j <= 9; j++){
-                
-                
-            }
-        }
-        
-    }
-    
-    
-    // prints representation of board to console; 1 for occupied, 0 for empty, -1 for sunk
+    // prints representation of board to console; 1 for occupied, 0 for empty, -1 or -2 for sunk/hits
     void printDebugBoard(){
         
         
@@ -212,6 +198,7 @@ public class GameBoard {
         
     }
     
+    // checks win condition
     public boolean win(){
         
         for (Piece p: pieces){
@@ -225,7 +212,7 @@ public class GameBoard {
     
 }
 
-
+// listener for each JButton in GUI of board
 class BoardButtonListener implements ActionListener{
 
     int row, col;
@@ -243,7 +230,7 @@ class BoardButtonListener implements ActionListener{
             OptionsPanel.getInstance().fire.setEnabled(true);
         
         } 
-       
+            // if we're reselecting the same piece, deselect it
             else if (row == board.selected.row && col == board.selected.column){
                 button.setBorder(new LineBorder(Color.BLACK, 2));
                 board.selected = null;
@@ -251,7 +238,6 @@ class BoardButtonListener implements ActionListener{
 
             } else {
 
-                
                 // only change the color if this piece hasn't been attacked before
                 if ((int)board.boardValues.get(board.selected.row).get(board.selected.column) > -1) {
                     board.boardButtons[board.selected.row][board.selected.column].setBorder(new LineBorder(Color.BLACK));
@@ -269,9 +255,4 @@ class BoardButtonListener implements ActionListener{
         button = b;
         board = gb;
     }
-    
-    
 }
-
-
-// http://stackoverflow.com/questions/21077322/create-a-chess-board-with-jpanel

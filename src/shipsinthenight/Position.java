@@ -8,6 +8,8 @@ package shipsinthenight;
 /**
  *
  * @author allisonfrauenpreis
+ * This class provides the position object used by the pieces and the board.
+ * The position knows its row and column, and may later also know what piece occupies it.
  */
 public class Position {
     
@@ -29,7 +31,8 @@ public class Position {
         
         return column;
     }
-    
+   
+    // convert to string for popup controller
     public String positionString(){
         
         switch (row){

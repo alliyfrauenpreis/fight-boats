@@ -11,6 +11,7 @@ import static javax.swing.JOptionPane.DEFAULT_OPTION;
 /**
  *
  * @author allisonfrauenpreis
+ * This class handles all popups for win, miss, hit, and sink conditions.
  */
 public class PopupController {
     
