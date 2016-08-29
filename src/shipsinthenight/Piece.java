@@ -6,6 +6,7 @@
 package shipsinthenight;
 
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 
     enum pieceType { AIR_CARRIER, BATTLESHIP, SUB, DESTROYER, PATROL };
 
@@ -22,6 +23,7 @@ public class Piece {
     ArrayList<Position> position;
     public int hits = 0;
     public boolean sunk = false;
+    ImageIcon icon;
   
     
     // create a new piece with default values
@@ -31,6 +33,7 @@ public class Piece {
         position = new ArrayList();
         size = 0;
         setup();
+        icon = new ImageIcon("Container-Ship-Top-Red-icon.png");
         
     }
     

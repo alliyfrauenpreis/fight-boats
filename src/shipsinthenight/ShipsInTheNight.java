@@ -50,20 +50,41 @@ public class ShipsInTheNight {
     
     public void startNewGame(String fieldContents){
         
+        
         this.gameController.setupGame(this);
         mainFrame = new JFrame();
         textField.setVisible(false);
         startButton.setVisible(false);
         title.setVisible(false);
-        mainPanel.add(oBoardLabel);
-        mainPanel.add(gameController.getOpponentBoardPanel());
+        
+        // layout left to right
+        mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.X_AXIS));
+        
+        // left panel
+        PiecesPanel piecesPanel = PiecesPanel.getInstance();
+        piecesPanel.setup();
+        mainPanel.add(piecesPanel.getPanel());
+        
+        // middle panel
+        JPanel middle = new JPanel();
+        middle.add(oBoardLabel);
+        middle.add(gameController.getOpponentBoardPanel());
+        
+        middle.add(pBoardLabel);
+        middle.add(gameController.getPlayerBoardPanel());
+        
+        mainPanel.add(middle);
+        
+        // right panel
         OptionsPanel options = OptionsPanel.getInstance();
-        mainPanel.add(pBoardLabel);
-        mainPanel.add(gameController.getPlayerBoardPanel());
         mainPanel.add(options.getPanel());
+        
+        
         mainFrame.add(mainPanel);
         mainFrame.pack();
         mainFrame.setVisible(true);
+        
+        GameController.getInstance().setState(GameState.SETUP);
         
     }
     

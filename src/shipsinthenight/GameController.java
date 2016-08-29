@@ -15,6 +15,11 @@ package shipsinthenight;
 
 import javax.swing.JPanel;
 import shipsinthenight.GameBoard;
+import static shipsinthenight.GameState.SETUP;
+
+
+
+enum GameState { SETUP, READY, PLAYING };
 
 // SINGLETON CLASS
 public class GameController {
@@ -25,6 +30,8 @@ public class GameController {
     Position selected = null;
     PopupController popupController;
     ShipsInTheNight appController;
+    GameState state = SETUP;
+    int pieceToSetup = 0;
     
     public GameController(){
         
@@ -96,14 +103,8 @@ public class GameController {
         opponentBoard.addPiece(patrol2);
         opponentBoard.addPiece(airCarrier2);
         
-        // disable your own board because you can only attack opponent
-        for (int i = 0; i < 10; i++){
-            for (int j = 0; j < 10; j++){
-                playerBoard.boardButtons[i][j].setEnabled(false);
-            }
-        }
-        
         playerBoard.printDebugBoard();
+        
         
     }
     
@@ -142,9 +143,45 @@ public class GameController {
         
     }
     
+    public void sendReadySignal(){
+        
+    
+    }
+    
     public void quitGame(){
         
         appController.quitGame();
+    }
+    
+    public void setState(GameState newState){
+        
+        state = newState;
+        
+        switch (state) {
+            
+            case SETUP:
+                opponentBoard.enableBoard(false);
+                playerBoard.enableBoard(true);
+                PiecesPanel.getInstance().enable();
+                break;
+            case READY:
+                sendReadySignal();
+                PiecesPanel.getInstance().disable();
+                playerBoard.enableBoard(false);
+                opponentBoard.enableBoard(true);
+                break;
+            case PLAYING:
+                opponentBoard.enableBoard(true);
+            default:
+                break;
+                
+        }
+    }
+    
+    public void savePieceToSetup(int size){
+        
+        pieceToSetup = size;
+        
     }
     
 }

@@ -23,7 +23,7 @@ import shipsinthenight.GameBoard;
 public class OptionsPanel {
     
     JPanel panel;
-    JButton fire, quit;
+    JButton fire, quit, ready, set;
     
     private static OptionsPanel instance = null;
     
@@ -49,8 +49,11 @@ public class OptionsPanel {
         fire.setEnabled(false);
         quit = new JButton("Quit");
         quit.addActionListener(new QuitButtonListener());
+        ready = new JButton("Ready!");
+        ready.addActionListener(new ReadyButtonListener());
         panel.add(fire);
         panel.add(quit);
+        panel.add(ready);
         
         
     }
@@ -92,6 +95,23 @@ class QuitButtonListener implements ActionListener{
     }
     
     public QuitButtonListener(){
+        
+       
+        
+    }
+}
+
+
+class ReadyButtonListener implements ActionListener{
+
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        
+        GameController.getInstance().setState(GameState.READY);
+    }
+    
+    public ReadyButtonListener(){
         
        
         
