@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -56,11 +57,15 @@ public class PiecesPanel {
             JButton newButton = new JButton();
             newButton.setMinimumSize(new Dimension(10,10*size));
             ImageIcon imageIcon = new ImageIcon(new BufferedImage(10, 10*size, BufferedImage.TYPE_INT_ARGB));
-            newButton.setIcon(imageIcon);
-            newButton.addActionListener(new PieceButtonListener(size));
+            newButton.setIcon(p.icon);
+            newButton.setBorder(BorderFactory.createEmptyBorder());
+            newButton.addActionListener(new PieceButtonListener(size, newButton, this));
             pieceButtons.add(newButton);
             piecesPanel.add(newButton);
         }
+        
+        GameController.getInstance().pieceToSetup = 5;
+        piecesPanel.setBackground(new Color (1, 22, 49));
     }
     
     public JPanel getPanel(){
@@ -83,12 +88,33 @@ public class PiecesPanel {
             b.setEnabled(true);
         }
     }
+    
+    // disables saved active button
+    public void disableButton(){
+        
+        activeButton.setEnabled(false);
+        
+        boolean ready = true;
+        
+        for (JButton b : pieceButtons ){
+            if (b.isEnabled()){
+                System.out.println("NOT READY");
+                ready = false;
+            }
+        }
+        
+        if (ready){
+            OptionsPanel.getInstance().ready.setEnabled(true);
+        }
+    }
 }
     
     
 class PieceButtonListener implements ActionListener{
 
     int buttonSize;
+    JButton pieceButton;
+    PiecesPanel piecesPanel;
     
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -96,12 +122,25 @@ class PieceButtonListener implements ActionListener{
         // save selected piece
         System.out.println("saving piece size" + buttonSize);
         GameController.getInstance().savePieceToSetup(buttonSize);
+        piecesPanel.activeButton = pieceButton;
+        
+        for (JButton b : piecesPanel.pieceButtons){
+            
+            b.setBorder(BorderFactory.createEmptyBorder());
+        
+            
+        }
+        
+        pieceButton.setBorder(new LineBorder(Color.white));
+        
         
     }
     
-    public PieceButtonListener(int s){
+    public PieceButtonListener(int s, JButton button, PiecesPanel panel){
         
        buttonSize = s;
+       pieceButton = button;
+       piecesPanel = panel;
         
     }
 }

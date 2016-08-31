@@ -51,6 +51,7 @@ public class OptionsPanel {
         quit.addActionListener(new QuitButtonListener());
         ready = new JButton("Ready!");
         ready.addActionListener(new ReadyButtonListener());
+        ready.setEnabled(false);
         panel.add(fire);
         panel.add(quit);
         panel.add(ready);
@@ -108,7 +109,7 @@ class ReadyButtonListener implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        GameController.getInstance().setState(GameState.READY);
+        GameController.getInstance().setState(GameState.PLAYING);
     }
     
     public ReadyButtonListener(){

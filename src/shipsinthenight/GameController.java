@@ -103,6 +103,8 @@ public class GameController {
         opponentBoard.addPiece(patrol2);
         opponentBoard.addPiece(airCarrier2);
         
+        opponentBoard.hidePieces();
+        
         playerBoard.printDebugBoard();
         
         
@@ -124,7 +126,7 @@ public class GameController {
         Position target = opponentBoard.selected;
         boolean sunk = opponentBoard.addHit(target);
         
-        // TODO: send over socket
+        System.out.println("sending attack");
         
         // launch popup depending on result of attack
         if (sunk){
@@ -172,6 +174,7 @@ public class GameController {
                 break;
             case PLAYING:
                 opponentBoard.enableBoard(true);
+                playerBoard.enableBoard(false);
             default:
                 break;
                 

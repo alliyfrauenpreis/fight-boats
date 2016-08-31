@@ -1,7 +1,10 @@
 
 package shipsinthenight;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -23,12 +26,16 @@ public class ShipsInTheNight {
     GameController gameController = GameController.getInstance();
     JLabel         title, subtitle, pBoardLabel, oBoardLabel;
     
+    ImageIcon       titleIcon;
+    
     
     public static void main(String[] args) {
         
         ShipsInTheNight s = new ShipsInTheNight();
        //s.serverHandler.start();
         
+        
+        s.titleIcon = new ImageIcon(new ImageIcon("title.png").getImage().getScaledInstance(320, 240, Image.SCALE_DEFAULT));
         s.mainPanel = new JPanel();
         s.mainFrame = new JFrame();
         s.mainPanel.setLayout(new BoxLayout(s.mainPanel,BoxLayout.Y_AXIS));
@@ -50,33 +57,49 @@ public class ShipsInTheNight {
     
     public void startNewGame(String fieldContents){
         
-        
         this.gameController.setupGame(this);
         mainFrame = new JFrame();
         textField.setVisible(false);
         startButton.setVisible(false);
         title.setVisible(false);
         
+        JLabel titleLabel = new JLabel(titleIcon);
+       // mainPanel.add(titleLabel);
         // layout left to right
         mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.X_AXIS));
         
         // left panel
+        JPanel leftPanel = new JPanel();
+        leftPanel.setBackground(new Color (1, 22, 49));
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         PiecesPanel piecesPanel = PiecesPanel.getInstance();
         piecesPanel.setup();
-        mainPanel.add(piecesPanel.getPanel());
+        
+        leftPanel.add(piecesPanel.getPanel());
+        leftPanel.add(titleLabel);
+        mainPanel.add(leftPanel);
         
         // middle panel
         JPanel middle = new JPanel();
-        middle.add(oBoardLabel);
-        middle.add(gameController.getOpponentBoardPanel());
+        middle.setLayout(new GridLayout(2,1));
         
-        middle.add(pBoardLabel);
-        middle.add(gameController.getPlayerBoardPanel());
+        JPanel topMiddle = new JPanel();
+        topMiddle.setBackground(new Color (1, 22, 49));
+        topMiddle.add(gameController.getOpponentBoardPanel());
         
+        
+        JPanel bottomMiddle = new JPanel();
+        bottomMiddle.setBackground(new Color (1, 22, 49));
+        bottomMiddle.add(gameController.getPlayerBoardPanel());
+        
+        middle.add(topMiddle);
+        middle.add(bottomMiddle);
+        middle.setBackground(new Color (1, 22, 49));
         mainPanel.add(middle);
         
         // right panel
         OptionsPanel options = OptionsPanel.getInstance();
+        options.getPanel().setBackground(new Color (1, 22, 49));
         mainPanel.add(options.getPanel());
         
         
@@ -84,7 +107,17 @@ public class ShipsInTheNight {
         mainFrame.pack();
         mainFrame.setVisible(true);
         
+        
+        mainFrame.setSize(new Dimension(1050,800));
+        mainFrame.setResizable(false);
+        
+        
         GameController.getInstance().setState(GameState.SETUP);
+        
+        mainPanel.setBackground(new Color (1, 22, 49));
+        mainFrame.setBackground(new Color (1, 22, 49));
+        
+        options.quit.requestFocus();
         
     }
     

@@ -33,7 +33,6 @@ public class Piece {
         position = new ArrayList();
         size = 0;
         setup();
-        icon = new ImageIcon("Container-Ship-Top-Red-icon.png");
         
     }
     
@@ -43,17 +42,22 @@ public class Piece {
         switch (type){
             case AIR_CARRIER:
                 size = 5;
+                icon = new ImageIcon("ship1.png");
                 break;
             case BATTLESHIP:
                 size = 4;
+                icon = new ImageIcon("ship2.png");
                 break;
             case SUB:
                 size = 3;
+                icon = new ImageIcon("ship3.png");
                 break;
             case DESTROYER:
+                icon = new ImageIcon("ship3.png");
                 size = 2;
                 break;
             case PATROL:
+                icon = new ImageIcon("ship3.png");
                 size = 2;
                 break;
             

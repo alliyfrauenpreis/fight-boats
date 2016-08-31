@@ -7,7 +7,9 @@ package shipsinthenight;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +19,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import static shipsinthenight.GameState.PLAYING;
 import static shipsinthenight.GameState.SETUP;
 import static shipsinthenight.pieceType.*;
 
@@ -38,10 +41,16 @@ public class GameBoard {
     JButton [][] boardButtons = new JButton [10][10];
     ArrayList highlightedRows, highlightedCols;
     Position selected = null;
+    Icon hitMarker, missMarker;
     
     
     public GameBoard(){
         
+        hitMarker = new ImageIcon(new ImageIcon("red-circle-icon-7.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        missMarker = new ImageIcon(new ImageIcon("Grey_close_x.svg.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        
+                
+        // http://stackoverflow.com/questions/6714045/how-to-resize-jlabel-imageicon
         
         // create a new list of lists that represents board
         // 0 means no piece, 1 means piece
@@ -56,7 +65,12 @@ public class GameBoard {
         
         // add top indexes
         for (int i = 1; i <= 10; i++){
-            boardPanel.add(new JLabel(String.valueOf(i), SwingConstants.CENTER));   
+            
+            JLabel number;
+            number = new JLabel(String.valueOf(i), SwingConstants.CENTER);
+            number.setForeground(new Color(1, 95, 156));
+            number.setFont(new Font ("Courier New", Font.BOLD, 20));
+            boardPanel.add(number);   
         }
         
         
@@ -66,14 +80,14 @@ public class GameBoard {
             ArrayList thisRow = new ArrayList();
             
             for (int j = 0; j <= 9; j++){
-                
                 // below is pulled in part from SO link (see comments above)
                 thisRow.add(j, 0);
                 JButton button = new JButton();
                 button.setMargin(margin);
-                ImageIcon imageIcon = new ImageIcon(new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB));
+                ImageIcon imageIcon = new ImageIcon(new BufferedImage(25, 25, BufferedImage.TYPE_INT_ARGB));
                 button.setIcon(imageIcon);
-                button.setBorder(new LineBorder(Color.BLACK, 2));
+                button.setBorder(new LineBorder(new Color(1, 95, 156), 2));
+                button.setBackground(new Color (1, 22, 49));
                 button.addActionListener(new BoardButtonListener(i, j, button, this));
                 boardButtons[i][j] = button;
                 boardPanel.add(boardButtons[i][j]);
@@ -85,9 +99,10 @@ public class GameBoard {
         }
        
         boardPanel.setMinimumSize(new Dimension(400,500));
+        boardPanel.setBackground(new Color (1, 22, 49));
         
+        // new Color(0, 33, 72)
         highlightedRows = new ArrayList();
-        
         highlightedCols = new ArrayList();
     }
     
@@ -115,7 +130,12 @@ public class GameBoard {
                 rowList.set(col, 1);
                 
                 // also update the GUI
+                System.out.println("COLORING " + row + ", " + col);
                 boardButtons[row][col].setBorder(new LineBorder(Color.CYAN, 2));
+                
+                // disable the side panel for that piece
+                if (PiecesPanel.getInstance().activeButton != null)
+                    PiecesPanel.getInstance().disableButton();
                 
             }
 
@@ -127,6 +147,11 @@ public class GameBoard {
 //        
 //        JLabel picLabel = new JLabel(piece.icon);
 //        boardPanel.add(picLabel);
+        
+        dehighlightEverything();
+        
+        // disable the last selected piece
+        
         
     }
     
@@ -167,8 +192,11 @@ public class GameBoard {
           // set color of space according to whether it was a hit or a miss
           if (isHit){
               boardButtons[row][col].setBorder(new LineBorder(Color.RED, 1));
+              boardButtons[row][col].setIcon(hitMarker);
           }else {
+              System.out.println("MISS");
               boardButtons[row][col].setBorder(new LineBorder(Color.GRAY, 1));
+              boardButtons[row][col].setIcon(missMarker);
           }
           
           // disable the button
@@ -220,6 +248,18 @@ public class GameBoard {
         }
         
         return true;
+    }
+    
+    public void hidePieces(){
+        
+        for (int i = 0; i < 9; i++){
+            
+            for (int j = 0; j < 9; j++){
+                
+                boardButtons[i][j].setBorder(new LineBorder(new Color(1, 95, 156), 2));
+                
+            }
+        }
     }
     
     
@@ -347,7 +387,7 @@ public class GameBoard {
             for (int j = 0; j < highlightedCols.size(); j++){
                 
                 if ((int) boardValues.get((int)highlightedRows.get(i)).get((int)highlightedCols.get(j)) != 1)
-                    boardButtons[(int)highlightedRows.get(i)][(int)highlightedCols.get(j)].setBorder(new LineBorder(Color.BLACK, 2));
+                    boardButtons[(int)highlightedRows.get(i)][(int)highlightedCols.get(j)].setBorder(new LineBorder(new Color(1, 95, 156), 2));
                 
             }
         }
@@ -392,6 +432,8 @@ public class GameBoard {
         activePiece.addPosition(initial);
         activePiece.addPosition(last);
         
+        System.out.println("initial is " + initial.row + ", " + initial.column + " and last is " + last.row + ", " + last.column);
+        
         // left
         if (col < initial.column){
             
@@ -417,7 +459,7 @@ public class GameBoard {
             
             for (int i = 1; i < pieceSize-1; i++){
                 
-                activePiece.addPosition(new Position(initial.row-1, initial.column));
+                activePiece.addPosition(new Position(initial.row-i, initial.column));
             }
             
             
@@ -428,7 +470,7 @@ public class GameBoard {
             
             for (int i = 1; i < pieceSize-1; i++){
                 
-                activePiece.addPosition(new Position(initial.row+1, initial.column));
+                activePiece.addPosition(new Position(initial.row+i, initial.column));
             }
             
         }
@@ -464,66 +506,81 @@ class BoardButtonListener implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        
         // if there's no previously selected piece, set this one selected
         if (board.selected == null){
+            System.out.println("first piece selected");
+            board.selected = new Position(row, col);
+            button.setBorder(new LineBorder(Color.MAGENTA, 2));
             
-            button.setBorder(new LineBorder(Color.MAGENTA));
-            OptionsPanel.getInstance().fire.setEnabled(true);
-            
-            // if we're in setup mode, highlight suggestions, de-highlight previous ones
-            if (GameController.getInstance().pieceToSetup != -1 && GameController.getInstance().state == SETUP){
-                
-                 board.dehighlightEverything();
-                 board.highlightSuggested(GameController.getInstance().pieceToSetup, row, col);
+            if (GameController.getInstance().state == PLAYING) {
+                System.out.println("allow fire");
+                OptionsPanel.getInstance().fire.setEnabled(true);
             }
             
-            
-            board.selected = new Position(row,col);
-            
+            // if we're in setup mode, highlight suggestions
+            else if (GameController.getInstance().state == SETUP){
+                
+                if (GameController.getInstance().pieceToSetup != -1) {
+                     board.highlightSuggested(GameController.getInstance().pieceToSetup, row, col);
+                }
+            }
         
         } 
-            // if we're reselecting the same piece, deselect it
-            else if (row == board.selected.row && col == board.selected.column){
-                button.setBorder(new LineBorder(Color.BLACK, 2));
+        
+        // if we're reselecting the same piece, deselect it
+        else if (row == board.selected.row && col == board.selected.column){
+                
+            System.out.println("reselecting");
+                button.setBorder(new LineBorder(new Color(1, 95, 156), 2));
                 board.selected = null;
                 OptionsPanel.getInstance().fire.setEnabled(false);
+                
+                if (GameController.getInstance().state == SETUP){
+                    board.dehighlightEverything();
+                }
 
-            } else {
-
-                System.out.println("Row is " + row + " and col " + col);
-                // if it's part of the suggested area, place the piece
+        }
+        
+        // we're selecting a new piece, and another one is already selected
+        else {
+            
+            // if we're setting up...
+            if (GameController.getInstance().state == SETUP){
                 
-                if (board.highlightedRows.contains(row) && board.highlightedCols.contains(col)){
+               // if it's part of the suggested area, place the piece
+               if (board.highlightedRows.contains(row) && board.highlightedCols.contains(col)){
                 
-                    board.placePiece(GameController.getInstance().pieceToSetup, row, col);
-                }
-                
-                else {
-                    
-                // otherwise,
-                // only change the color if this piece hasn't been attacked before
-                if ((int)board.boardValues.get(board.selected.row).get(board.selected.column) > -1) {
-                    board.boardButtons[row][col].setBorder(new LineBorder(Color.BLACK));
-                }
-                
-                button.setBorder(new LineBorder(Color.MAGENTA));
-                OptionsPanel.getInstance().fire.setEnabled(true);
-                
-                // if we're in setup mode, highlight suggestions, de-highlight previous ones
-                if (GameController.getInstance().pieceToSetup != -1 && GameController.getInstance().state == SETUP){
-                  
-                    
-        board.dehighlightEverything();
-                    board.highlightSuggested(GameController.getInstance().pieceToSetup, row, col);
-                    
-                }
-                
-                
-                board.selected = new Position(row,col);
-                
-                }
+                   if (GameController.getInstance().state == SETUP){
+                        board.placePiece(GameController.getInstance().pieceToSetup, row, col);
+                        board.selected = null;
+                   }
+               }
+               
+               // otherwise, de-highlight everything and suggest again
+               else {
+                   board.dehighlightEverything();
+                   board.boardButtons[board.selected.row][board.selected.column].setBorder(new LineBorder(new Color(1, 95, 156), 2));
+                   board.selected = new Position(row, col);
+                   button.setBorder(new LineBorder(Color.MAGENTA, 2));
+                   board.highlightSuggested(GameController.getInstance().pieceToSetup, row, col);
+               } 
             }
+            
+            else if (GameController.getInstance().state == PLAYING){
+                System.out.println("Playing, selecting another piece");
+                
+                // change previous piece back to white
+                if ((int)board.boardValues.get(board.selected.row).get(board.selected.column) > -1) {
+                    
+                    board.boardButtons[board.selected.row][board.selected.column].setBorder(new LineBorder(new Color(1, 95, 156), 2));
+               }
+                
+               button.setBorder(new LineBorder(Color.MAGENTA));
+               OptionsPanel.getInstance().fire.setEnabled(true);
+               board.selected = new Position(row, col);
+            }
+            
+        }
     }
     
     public BoardButtonListener(int r, int c, JButton b, GameBoard gb){
