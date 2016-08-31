@@ -16,6 +16,8 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 import static shipsinthenight.pieceType.*;
 
@@ -53,8 +55,8 @@ public class PiecesPanel {
         ArrayList<Piece> pieces = new ArrayList<Piece>();
         pieces.add(new Piece(AIR_CARRIER));
         pieces.add(new Piece(BATTLESHIP));
-        pieces.add(new Piece(DESTROYER));
         pieces.add(new Piece(SUB));
+        pieces.add(new Piece(DESTROYER));
         pieces.add(new Piece(PATROL));
         
         

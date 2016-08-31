@@ -67,10 +67,10 @@ public class GameController {
         
         
         player1Board.addPiece(airCarrier);
-        player1Board.addPiece(patrol);
         player1Board.addPiece(battleship);
-        player1Board.addPiece(destroyer);
         player1Board.addPiece(sub);
+        player1Board.addPiece(destroyer);
+        player1Board.addPiece(patrol);
         
         patrol = new Piece(shipsinthenight.pieceType.PATROL);
         airCarrier = new Piece(shipsinthenight.pieceType.AIR_CARRIER);
@@ -80,10 +80,10 @@ public class GameController {
         
         
         player2Board.addPiece(airCarrier);
-        player2Board.addPiece(patrol);
         player2Board.addPiece(battleship);
-        player2Board.addPiece(destroyer);
         player2Board.addPiece(sub);
+        player2Board.addPiece(destroyer);
+        player2Board.addPiece(patrol);
         
 
         currentBoard = player1Board;
@@ -111,7 +111,9 @@ public class GameController {
         // get the selected position on the opponent board
         Position target = otherBoard.selected;
         boolean sunk = otherBoard.addHit(target);
-        
+        otherBoard.hidePieces();
+        currentBoard.hidePieces();
+            
         System.out.println("sending attack");
         
         // launch popup depending on result of attack
@@ -123,6 +125,7 @@ public class GameController {
                 popupController.launchSinkPopup(target);
             }
         } else if (otherBoard.checkSpace(target) == 1){
+            
             popupController.launchHitPopup(target);
         } else {
             popupController.launchMissPopup(target);
@@ -200,6 +203,7 @@ public class GameController {
            
            // hide and disable other board; show and enable player 2 board;
            setState(SETUP);
+           OptionsPanel.getInstance().ready.setEnabled(false);
           
            PopupController.getInstance().launchPlacePiecesPopup();
        }
@@ -213,7 +217,6 @@ public class GameController {
                player1Board.enableBoard(false);
                player2Board.enableBoard(true);
                player1Board.update();
-               
                
            }
            

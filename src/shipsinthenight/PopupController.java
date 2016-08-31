@@ -37,25 +37,27 @@ public class PopupController {
         currentPlayer = 1;
     }
     
-    public void launchHitPopup(Position p){
+    public int launchHitPopup(Position p){
         
-        JOptionPane.showMessageDialog(null, "Direct hit on space " + p.positionString() + "!");
+        int ok = JOptionPane.showConfirmDialog(null, "Direct hit on space " + p.positionString() + "!", null, DEFAULT_OPTION);
+        return ok;
+        
     }
     
        
     public void launchSinkPopup(Position p){
         
-        JOptionPane.showMessageDialog(null, "You sunk the opponent's ship!");
+        JOptionPane.showConfirmDialog(null, "You sunk the opponent's ship!", null, DEFAULT_OPTION);
     } 
     
    public void launchMissPopup(Position p){
         
-        JOptionPane.showMessageDialog(null, "You missed on space " + p.positionString() + "!");
+        JOptionPane.showConfirmDialog(null, "You missed on space " + p.positionString() + "!", null, DEFAULT_OPTION);
     } 
    
    public void launchWinPopup(){
        
-       JOptionPane.showMessageDialog(null, "YOU WIN!!!!");
+       JOptionPane.showConfirmDialog(null, "YOU WIN!!!!", null, DEFAULT_OPTION);
    }
    
    
@@ -64,8 +66,8 @@ public class PopupController {
        currentPlayer = GameController.getInstance().currentPlayer;
        
        if (currentPlayer == 1)
-            JOptionPane.showMessageDialog(null, "Player 1: Please place your pieces on the board. Make sure that Player 2 isn't looking while you do it!");
+            JOptionPane.showConfirmDialog(null, "Player 1: Please place your pieces on the board. Make sure that Player 2 isn't looking while you do it!", null, DEFAULT_OPTION);
        else
-            JOptionPane.showMessageDialog(null, "Player 2: Please place your pieces on the board. Make sure that Player 1 isn't looking while you do it!");
+            JOptionPane.showConfirmDialog(null, "Player 2: Please place your pieces on the board. Make sure that Player 1 isn't looking while you do it!", null, DEFAULT_OPTION);
    }
 }

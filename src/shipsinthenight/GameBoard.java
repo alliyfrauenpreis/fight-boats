@@ -284,9 +284,9 @@ public class GameBoard {
     
     public void hidePieces(){
         
-        for (int i = 0; i < 9; i++){
+        for (int i = 0; i <=9; i++){
             
-            for (int j = 0; j < 9; j++){
+            for (int j = 0; j <= 9; j++){
                 
                 boardButtons[i][j].setBorder(new LineBorder(new Color(1, 95, 156), 2));
                 
@@ -424,6 +424,14 @@ public class GameBoard {
             }
         }
         
+        for (int i = 0; i <= 9; i++){
+            for (int j = 0; j <= 9; j++){
+                
+                if ((int)boardValues.get(i).get(j) == 0)
+                    boardButtons[i][j].setBorder(new LineBorder(new Color(1, 95, 156), 2));
+            }
+        }
+        
         
         highlightedRows.clear();
         highlightedCols.clear();
@@ -547,6 +555,8 @@ class BoardButtonListener implements ActionListener{
             if (GameController.getInstance().state == PLAYING) {
                 System.out.println("allow fire");
                 OptionsPanel.getInstance().fire.setEnabled(true);
+                OptionsPanel.getInstance().fire.requestFocus();
+                
             }
             
             // if we're in setup mode, highlight suggestions
@@ -585,6 +595,7 @@ class BoardButtonListener implements ActionListener{
                    if (GameController.getInstance().state == SETUP){
                         board.placePiece(GameController.getInstance().pieceToSetup, row, col);
                         board.selected = null;
+                        
                    }
                }
                
@@ -609,6 +620,7 @@ class BoardButtonListener implements ActionListener{
                 
                button.setBorder(new LineBorder(Color.MAGENTA));
                OptionsPanel.getInstance().fire.setEnabled(true);
+                OptionsPanel.getInstance().fire.requestFocus();
                board.selected = new Position(row, col);
             }
             

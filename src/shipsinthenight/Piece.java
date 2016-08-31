@@ -42,22 +42,22 @@ public class Piece {
         switch (type){
             case AIR_CARRIER:
                 size = 5;
-                icon = new ImageIcon("ship1.png");
+                icon = new ImageIcon("ship5.png");
                 break;
             case BATTLESHIP:
                 size = 4;
-                icon = new ImageIcon("ship2.png");
+                icon = new ImageIcon("ship4.png");
                 break;
             case SUB:
                 size = 3;
                 icon = new ImageIcon("ship3.png");
                 break;
             case DESTROYER:
-                icon = new ImageIcon("ship3.png");
+                icon = new ImageIcon("ship2-1.png");
                 size = 2;
                 break;
             case PATROL:
-                icon = new ImageIcon("ship3.png");
+                icon = new ImageIcon("ship2-2.png");
                 size = 2;
                 break;
             

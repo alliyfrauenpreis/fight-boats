@@ -17,6 +17,8 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.SwingUtilities;
 import shipsinthenight.GameBoard;
 
 // SINGLETON CLASS
@@ -58,6 +60,7 @@ public class OptionsPanel {
         panel.add(quit);
         panel.add(ready);
         panel.add(toggle);
+     
         
     }
     
@@ -122,6 +125,9 @@ class ReadyButtonListener implements ActionListener{
         if (GameController.getInstance().player1Ready && GameController.getInstance().player2Ready) {
             
             GameController.getInstance().setState(GameState.PLAYING);
+            
+        JRootPane pane = SwingUtilities.getRootPane(OptionsPanel.getInstance().panel);
+        pane.setDefaultButton(OptionsPanel.getInstance().fire);
         } 
         
         GameController.getInstance().swapPlayers();
