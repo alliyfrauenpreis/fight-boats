@@ -5,6 +5,7 @@
  */
 package shipsinthenight;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -16,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.*;
+import static javax.swing.SwingConstants.BOTTOM;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -37,7 +39,7 @@ public class GameBoard {
     ArrayList<ArrayList> boardValues;
     ArrayList markerLocations = new ArrayList();
     ArrayList<Piece> pieces = new ArrayList();
-    JPanel boardPanel;
+    JPanel boardPanel, mainPanel;
     JButton [][] boardButtons = new JButton [10][10];
     ArrayList highlightedRows, highlightedCols;
     Position selected = null;
@@ -56,8 +58,23 @@ public class GameBoard {
         // 0 means no piece, 1 means piece
         // create the panel for displaying the board in the gui
         
+        mainPanel = new JPanel();
+        
+        JPanel leftMiddle = new JPanel();
+        leftMiddle.setBorder(BorderFactory.createEmptyBorder(25,0,0,0));
+        leftMiddle.setAlignmentY(BOTTOM);
+        mainPanel.add(leftMiddle);
+        leftMiddle.setBackground(new Color (1, 22, 49));
+        
+        
+        ImageIcon letters = new ImageIcon("letters.png");
+        JLabel l = new JLabel(letters);
+        l.setVerticalAlignment(BOTTOM);
+        leftMiddle.add(l);
+                
+        mainPanel.add(leftMiddle);
         boardPanel = new JPanel(new GridLayout(0,10));
-        boardPanel.setBorder(new EmptyBorder(20,20,20,20));
+        boardPanel.setBorder(new EmptyBorder(0,0,0,0));
         boardValues = new ArrayList();
         
         // below is pulled from SO link (see comments above)
@@ -72,6 +89,8 @@ public class GameBoard {
             number.setFont(new Font ("Courier New", Font.BOLD, 20));
             boardPanel.add(number);   
         }
+        
+        
         
         
         // create rows and columns
@@ -101,15 +120,22 @@ public class GameBoard {
         boardPanel.setMinimumSize(new Dimension(400,500));
         boardPanel.setBackground(new Color (1, 22, 49));
         
-        // new Color(0, 33, 72)
         highlightedRows = new ArrayList();
         highlightedCols = new ArrayList();
+        mainPanel.add(boardPanel);
+        mainPanel.setBackground(new Color (1, 22, 49));
+        pieces = new ArrayList(5);
+        pieces.add(new Piece(BATTLESHIP));
+        pieces.add(new Piece(BATTLESHIP));
+        pieces.add(new Piece(BATTLESHIP));
+        pieces.add(new Piece(BATTLESHIP));
+        pieces.add(new Piece(BATTLESHIP));
     }
     
     // getter for the GUI board
     public JPanel getBoard(){
         
-        return boardPanel;
+        return mainPanel;
     }
     
     // adds a piece to the positions that the piece holds
@@ -117,7 +143,25 @@ public class GameBoard {
         
         if (piece.isSet()){
             
-            pieces.add(piece);
+            switch (piece.type){
+            case AIR_CARRIER:
+                pieces.set(0, piece);
+                break;
+            case BATTLESHIP:
+                pieces.set(1, piece);
+                break;
+            case SUB:
+                pieces.set(2, piece);
+                break;
+            case DESTROYER:
+                pieces.set(3, piece);
+                break;
+            case PATROL:
+                pieces.set(4, piece);
+                break;
+            }
+            
+            
             ArrayList<Position> piecePositions = piece.getPositions();
 
             for (int i = 0; i < piecePositions.size(); i++){
@@ -132,7 +176,7 @@ public class GameBoard {
                 // also update the GUI
                 System.out.println("COLORING " + row + ", " + col);
                 boardButtons[row][col].setBorder(new LineBorder(Color.CYAN, 2));
-                
+                boardButtons[row][col].setEnabled(false);
                 // disable the side panel for that piece
                 if (PiecesPanel.getInstance().activeButton != null)
                     PiecesPanel.getInstance().disableButton();
@@ -397,25 +441,30 @@ public class GameBoard {
         legal = true;
         
         for (int i = 1; i < pieceSize; i++){
-            
             colOffset = col + i;
                     
             if (colOffset > 9) {
                         
+            System.out.println("column " + (colOffset) + " is illegal1");
+                
+            
                 legal = false;
             }
                    
             else if ((int)boardValues.get(row).get(colOffset) == 1){
+                
+            System.out.println("column " + (colOffset) + " is illegal2");
                 legal = false;
             }
         }  
           
         if (legal){
             
+            System.out.println("column " + (colOffset) + " is legal!");
             for (int i = 1; i < pieceSize; i++){
                 boardButtons[row][col+i].setBorder(new LineBorder(Color.YELLOW));
                 highlightedRows.add(row);
-                highlightedCols.add(col+1);
+                highlightedCols.add(col+i);
             }
         }
         
@@ -453,6 +502,7 @@ public class GameBoard {
         System.out.println("place piece!");
         Piece activePiece;
         
+        
         switch (pieceSize){
             case 5:
                 activePiece = new Piece(AIR_CARRIER);
@@ -486,19 +536,20 @@ public class GameBoard {
         System.out.println("initial is " + initial.row + ", " + initial.column + " and last is " + last.row + ", " + last.column);
         
         // left
-        if (col < initial.column){
+        if (last.column < initial.column){
             
             for (int i = 1; i < pieceSize-1; i++){
-                
+                System.out.println("ADDING POSITION" + initial.row + ", " + (initial.column-i));
                 activePiece.addPosition(new Position(initial.row, initial.column - i));
             }
             
         } 
         
         // right
-        else if (col > initial.column) {
+        else if (last.column > initial.column) {
+            System.out.println("last column > initial column");
             
-            for (int i = 1; i < pieceSize-1; i++){
+            for (int i = 1; i < pieceSize; i++){
                 
                 activePiece.addPosition(new Position(initial.row, initial.column + i));
             }
@@ -506,7 +557,7 @@ public class GameBoard {
         }
         
         // down
-        else if (row < initial.row){
+        else if (last.row < initial.row){
             
             for (int i = 1; i < pieceSize-1; i++){
                 
@@ -517,7 +568,7 @@ public class GameBoard {
         }
         
         // up
-        else if (row > initial.row) {
+        else if (last.row > initial.row) {
             
             for (int i = 1; i < pieceSize-1; i++){
                 
@@ -601,8 +652,8 @@ class BoardButtonListener implements ActionListener{
             if (GameController.getInstance().state == SETUP){
                 
                // if it's part of the suggested area, place the piece
-               if (board.highlightedRows.contains(row) && board.highlightedCols.contains(col)){
-                
+               if ((board.highlightedRows.contains(row) & board.highlightedCols.contains(col))){
+                   System.out.println("it's in the highlighted...");
                    if (GameController.getInstance().state == SETUP){
                         board.placePiece(GameController.getInstance().pieceToSetup, row, col);
                         board.selected = null;

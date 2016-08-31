@@ -1,6 +1,7 @@
 
 package shipsinthenight;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -10,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.*;
 import static javax.swing.SwingConstants.CENTER;
+import javax.swing.border.Border;
 
 /**
  *
@@ -37,10 +39,11 @@ public class ShipsInTheNight {
         
         s.titleIcon = new ImageIcon(new ImageIcon("title.png").getImage().getScaledInstance(320, 240, Image.SCALE_DEFAULT));
         s.mainPanel = new JPanel();
+        s.mainPanel.setBackground(new Color (1, 22, 49));
         s.mainFrame = new JFrame();
         s.mainPanel.setLayout(new BoxLayout(s.mainPanel,BoxLayout.Y_AXIS));
-        s.title = new JLabel("Ships in the Night");
-        s.mainPanel.add(s.title);
+        s.title = new JLabel(s.titleIcon);
+        s.mainPanel.add(s.title,BorderLayout.LINE_END);
         s.startButton = new JButton("START!");
         s.startButton.addActionListener(new StartButtonListener(s));
         s.pBoardLabel = new JLabel("Your Board");
@@ -76,21 +79,24 @@ public class ShipsInTheNight {
         piecesPanel.setup();
         
         leftPanel.add(piecesPanel.getPanel());
-        leftPanel.add(titleLabel);
+       // leftPanel.add(titleLabel);
+        leftPanel.setMaximumSize(new Dimension(200,500));
         mainPanel.add(leftPanel);
         
         // middle panel
         JPanel middle = new JPanel();
         middle.setLayout(new GridLayout(2,1));
         
+        middle.setMaximumSize(new Dimension(500,1100));
+        
         JPanel topMiddle = new JPanel();
         topMiddle.setBackground(new Color (1, 22, 49));
-        topMiddle.add(gameController.otherBoard.boardPanel);
+        topMiddle.add(gameController.otherBoard.mainPanel);
         
         
         JPanel bottomMiddle = new JPanel();
         bottomMiddle.setBackground(new Color (1, 22, 49));
-        bottomMiddle.add(gameController.currentBoard.boardPanel);
+        bottomMiddle.add(gameController.currentBoard.mainPanel);
         
         middle.add(topMiddle);
         middle.add(bottomMiddle);
@@ -108,7 +114,7 @@ public class ShipsInTheNight {
         mainFrame.setVisible(true);
         
         
-        mainFrame.setSize(new Dimension(1050,800));
+        mainFrame.setSize(new Dimension(900,800));
         mainFrame.setResizable(false);
         
         

@@ -19,7 +19,7 @@ public class Piece {
     
     
     public int size;
-    private pieceType type;
+    public pieceType type;
     ArrayList<Position> position;
     public int hits = 0;
     public boolean sunk = false;
@@ -110,7 +110,8 @@ public class Piece {
     // checks if all positions in piece are set
     public boolean isSet(){
         
-        if (position.size() == size){
+       System.out.println("position size is " + position.size() + " and size is " + size);
+        if (position.size() >= size){
             
             return true;
             

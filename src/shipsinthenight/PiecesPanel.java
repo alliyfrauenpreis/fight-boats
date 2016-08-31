@@ -89,6 +89,7 @@ public class PiecesPanel {
         
         GameController.getInstance().pieceToSetup = 5;
         piecesPanel.setBackground(new Color (1, 22, 49));
+        
     }
     
     
@@ -117,15 +118,14 @@ public class PiecesPanel {
     public void updateCounts(GameBoard currentBoard){
         ArrayList<Piece> currentPieces = currentBoard.pieces;
         
-        for (int i = currentPieces.size()-1; i >=0; i--){
-            
+        for (int i = 0; i < pieceButtons.size(); i++){
             if (currentPieces.get(i).sunk){
-                pieceButtons.get(currentPieces.size()-1-i).setEnabled(false);
-                pieceButtons.get(currentPieces.size()-1-i).setText("X");
+                pieceButtons.get(i).setEnabled(false);
+                pieceButtons.get(i).setText("X");
             } else {
                 System.out.println("NOT SUNK!");
-                pieceButtons.get(currentPieces.size()-1-i).setEnabled(true);
-                pieceButtons.get(currentPieces.size()-1-i).setText(Integer.toString(currentPieces.get(i).size - currentPieces.get(i).hits));
+                pieceButtons.get(i).setEnabled(true);
+                pieceButtons.get(i).setText(Integer.toString(currentPieces.get(i).size - currentPieces.get(i).hits));
             }
         }
                     
@@ -190,7 +190,6 @@ class PieceButtonListener implements ActionListener{
         for (JButton b : piecesPanel.pieceButtons){
             
             b.setBorder(BorderFactory.createEmptyBorder());
-        
             
         }
         

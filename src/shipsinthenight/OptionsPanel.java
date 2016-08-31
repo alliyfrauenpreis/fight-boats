@@ -12,10 +12,13 @@ package shipsinthenight;
  */
 
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.DEFAULT_OPTION;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
@@ -25,7 +28,7 @@ import shipsinthenight.GameBoard;
 public class OptionsPanel {
     
     JPanel panel;
-    JButton fire, quit, ready, set, toggle;
+    JButton fire, quit, ready, set, help;
     
     private static OptionsPanel instance = null;
     
@@ -46,6 +49,7 @@ public class OptionsPanel {
     public void setup(){
         
         panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         fire = new JButton("Fire!");
         fire.addActionListener(new FireButtonListener());
         fire.setEnabled(false);
@@ -54,13 +58,13 @@ public class OptionsPanel {
         ready = new JButton("Ready!");
         ready.addActionListener(new ReadyButtonListener());
         ready.setEnabled(false);
-        toggle = new JButton("Toggle who's turn it is");
-        toggle.addActionListener(new ToggleButtonListener());
+        help = new JButton("Help");
+        help.addActionListener(new HelpButtonListener());
+        help.setEnabled(true);
         panel.add(fire);
         panel.add(quit);
         panel.add(ready);
-        panel.add(toggle);
-     
+        panel.add(help);
         
     }
     
@@ -140,17 +144,38 @@ class ReadyButtonListener implements ActionListener{
     }
 }
 
-// toggles player turn, for debugging
-class ToggleButtonListener implements ActionListener{
+class HelpButtonListener implements ActionListener{
 
     
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        GameController.getInstance().swapPlayers();
+        switch (GameController.getInstance().state){
+            
+            case READY:
+                
+                JOptionPane.showMessageDialog(null, "Switch players so that your opponent can place their pieces before you start playing!");
+                
+                break;
+            case PLAYING:
+                
+                
+                JOptionPane.showMessageDialog(null, "Select a square on your opponent's board to attack, then click FIRE! to launch your missile. \n You will be notified whether you hit or miss. \n The pieces at the left show you how many squares there are left un-scarred for each of your opponent's ships.");
+                
+                break;
+            case SETUP:
+                
+                JOptionPane pane = new JOptionPane();
+                pane.setSize(new Dimension(200,200));
+                pane.showMessageDialog(null, "Select a piece on the left and then click on a space on your board to see legal placement areas. \n Click the last box in the placement area you want to set to place your piece. \n Once all are set, click READY. \n Be careful, though -- you only get one shot to place them, because moving ships is expensive!");
+                
+                
+                break;
+                
+        }
     }
     
-    public ToggleButtonListener(){
+    public HelpButtonListener(){
         
        
         
