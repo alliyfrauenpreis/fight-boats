@@ -59,24 +59,24 @@ public class GameController {
         popupController = new PopupController();
         appController = s;
         
-        Piece patrol = new Piece(shipsinthenight.pieceType.PATROL);
         Piece airCarrier = new Piece(shipsinthenight.pieceType.AIR_CARRIER);
         Piece battleship = new Piece(shipsinthenight.pieceType.BATTLESHIP);
-        Piece destroyer = new Piece(shipsinthenight.pieceType.DESTROYER);
         Piece sub = new Piece(shipsinthenight.pieceType.SUB);
+        Piece destroyer = new Piece(shipsinthenight.pieceType.DESTROYER);
+        Piece patrol = new Piece(shipsinthenight.pieceType.PATROL);
         
-        
+        /*
         player1Board.addPiece(airCarrier);
         player1Board.addPiece(battleship);
         player1Board.addPiece(sub);
         player1Board.addPiece(destroyer);
         player1Board.addPiece(patrol);
         
-        patrol = new Piece(shipsinthenight.pieceType.PATROL);
         airCarrier = new Piece(shipsinthenight.pieceType.AIR_CARRIER);
         battleship = new Piece(shipsinthenight.pieceType.BATTLESHIP);
-        destroyer = new Piece(shipsinthenight.pieceType.DESTROYER);
         sub = new Piece(shipsinthenight.pieceType.SUB);
+        destroyer = new Piece(shipsinthenight.pieceType.DESTROYER);
+        patrol = new Piece(shipsinthenight.pieceType.PATROL);
         
         
         player2Board.addPiece(airCarrier);
@@ -84,7 +84,7 @@ public class GameController {
         player2Board.addPiece(sub);
         player2Board.addPiece(destroyer);
         player2Board.addPiece(patrol);
-        
+        */
 
         currentBoard = player1Board;
         otherBoard = player2Board;
@@ -158,7 +158,6 @@ public class GameController {
                 break;
             case READY:
                 sendReadySignal();
-                PiecesPanel.getInstance().disable();
                 otherBoard.enableBoard(false);
                 currentBoard.enableBoard(true);
                 break;
@@ -211,12 +210,15 @@ public class GameController {
        // they're both ready!
        else {
            
+           
            if (currentPlayer == 1){
                
                player2Board.hidePieces();
                player1Board.enableBoard(false);
                player2Board.enableBoard(true);
                player1Board.update();
+               
+               PiecesPanel.getInstance().updateCounts(player2Board);
                
            }
            
@@ -227,6 +229,7 @@ public class GameController {
                player1Board.enableBoard(true);
                player2Board.update();
                
+               PiecesPanel.getInstance().updateCounts(player1Board);
                
            }
            

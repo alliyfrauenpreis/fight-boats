@@ -7,6 +7,7 @@ package shipsinthenight;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +18,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import static javax.swing.SwingConstants.CENTER;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 import static shipsinthenight.pieceType.*;
@@ -31,6 +33,8 @@ public class PiecesPanel {
     JPanel piecesPanel = new JPanel();
     ArrayList<JButton> pieceButtons;
     JButton activeButton;
+    ArrayList<Piece> pieces;
+    int[] sizeArray = new int[5];
     
     private PiecesPanel(){
     
@@ -51,8 +55,13 @@ public class PiecesPanel {
         // create a new panel and add buttons to it for each pieces
         piecesPanel = new JPanel();
         pieceButtons = new ArrayList<JButton>();
+        sizeArray[0] = 5;
+        sizeArray[1] = 4;
+        sizeArray[2] = 3;
+        sizeArray[3] = 2;
+        sizeArray[4] = 2;
         
-        ArrayList<Piece> pieces = new ArrayList<Piece>();
+        pieces = new ArrayList<Piece>();
         pieces.add(new Piece(AIR_CARRIER));
         pieces.add(new Piece(BATTLESHIP));
         pieces.add(new Piece(SUB));
@@ -67,6 +76,11 @@ public class PiecesPanel {
             newButton.setMinimumSize(new Dimension(10,10*size));
             ImageIcon imageIcon = new ImageIcon(new BufferedImage(10, 10*size, BufferedImage.TYPE_INT_ARGB));
             newButton.setIcon(p.icon);
+            newButton.setText(Integer.toString(p.size));
+            newButton.setHorizontalTextPosition(CENTER);
+            newButton.setVerticalTextPosition(CENTER);
+            newButton.setFont(new Font("Courier New", Font.BOLD, 20));
+            newButton.setForeground(Color.WHITE);
             newButton.setBorder(BorderFactory.createEmptyBorder());
             newButton.addActionListener(new PieceButtonListener(size, newButton, this));
             pieceButtons.add(newButton);
@@ -81,18 +95,40 @@ public class PiecesPanel {
     // update pieces to reflect set ones when switching players
     public void update(GameBoard currentBoard){
         
-        ArrayList<Piece> pieces = currentBoard.pieces;
+        /*
+        ArrayList<Piece> currentPieces = currentBoard.pieces;
         
-        for (int i = 0; i < pieces.size(); i++){
+        for (int i = 0; i < currentPieces.size(); i++){
             
-            if (pieces.get(i).isSet()){
+            if (currentPieces.get(i).isSet()){
                 
                 pieceButtons.get(i).setEnabled(false);
-            } else {
                 
+            } else {
                 pieceButtons.get(i).setEnabled(true);
             }
         }
+        
+        */
+        
+    }
+    
+    
+    public void updateCounts(GameBoard currentBoard){
+        ArrayList<Piece> currentPieces = currentBoard.pieces;
+        
+        for (int i = currentPieces.size()-1; i >=0; i--){
+            
+            if (currentPieces.get(i).sunk){
+                pieceButtons.get(currentPieces.size()-1-i).setEnabled(false);
+                pieceButtons.get(currentPieces.size()-1-i).setText("X");
+            } else {
+                System.out.println("NOT SUNK!");
+                pieceButtons.get(currentPieces.size()-1-i).setEnabled(true);
+                pieceButtons.get(currentPieces.size()-1-i).setText(Integer.toString(currentPieces.get(i).size - currentPieces.get(i).hits));
+            }
+        }
+                    
     }
     
     public JPanel getPanel(){

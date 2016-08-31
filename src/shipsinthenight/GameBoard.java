@@ -184,7 +184,9 @@ public class GameBoard {
                         
                         boardButtons[piecePosition.row][piecePosition.column].setBorder(new LineBorder(Color.YELLOW,2));
                         boardButtons[piecePosition.row][piecePosition.column].setEnabled(false);
+                        boardValues.get(piecePosition.row).set(piecePosition.column, -3);
                     }
+                    
                     return true;
                 }
             }
@@ -244,6 +246,12 @@ public class GameBoard {
                     boardButtons[i][j].setBorder(new LineBorder(Color.GRAY, 1));
                     boardButtons[i][j].setIcon(missMarker);
                 }
+                
+                // space sunk
+                else if ((int)boardValues.get(i).get(j) == -3){
+                    boardButtons[i][j].setBorder(new LineBorder(Color.YELLOW, 1));
+                    boardButtons[i][j].setIcon(hitMarker);
+                }
                     
                 // space empty
                 else
@@ -254,7 +262,7 @@ public class GameBoard {
         
     }
     
-    // prints representation of board to console; 1 for occupied, 0 for empty, -1 or -2 for sunk/hits
+    // prints representation of board to console; 1 for occupied, 0 for empty, -1 or -2 for sunk/hits, -3 for sunk
     void printDebugBoard(){
         
         
@@ -288,7 +296,10 @@ public class GameBoard {
             
             for (int j = 0; j <= 9; j++){
                 
-                boardButtons[i][j].setBorder(new LineBorder(new Color(1, 95, 156), 2));
+                if ((int)boardValues.get(i).get(j) != -3)
+                    boardButtons[i][j].setBorder(new LineBorder(new Color(1, 95, 156), 2));
+                else
+                    boardButtons[i][j].setBorder(new LineBorder(Color.YELLOW));
                 
             }
         }

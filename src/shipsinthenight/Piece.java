@@ -18,7 +18,7 @@ import javax.swing.ImageIcon;
 public class Piece {
     
     
-    private int size;
+    public int size;
     private pieceType type;
     ArrayList<Position> position;
     public int hits = 0;
@@ -70,7 +70,6 @@ public class Piece {
         
         hits = hits + 1;
         if (hits == size){
-            
             sunk = true;
         }
     }

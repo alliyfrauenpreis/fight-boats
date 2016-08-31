@@ -39,7 +39,7 @@ public class PopupController {
     
     public int launchHitPopup(Position p){
         
-        int ok = JOptionPane.showConfirmDialog(null, "Direct hit on space " + p.positionString() + "!", null, DEFAULT_OPTION);
+        int ok = JOptionPane.showConfirmDialog(null, "Direct hit on space " + p.positionString() + "! Switch players now.", null, DEFAULT_OPTION);
         return ok;
         
     }
@@ -47,12 +47,12 @@ public class PopupController {
        
     public void launchSinkPopup(Position p){
         
-        JOptionPane.showConfirmDialog(null, "You sunk the opponent's ship!", null, DEFAULT_OPTION);
+        JOptionPane.showConfirmDialog(null, "You sunk the opponent's ship! Switch players now.", null, DEFAULT_OPTION);
     } 
     
    public void launchMissPopup(Position p){
         
-        JOptionPane.showConfirmDialog(null, "You missed on space " + p.positionString() + "!", null, DEFAULT_OPTION);
+        JOptionPane.showConfirmDialog(null, "You missed on space " + p.positionString() + "! Switch players now.", null, DEFAULT_OPTION);
     } 
    
    public void launchWinPopup(){
