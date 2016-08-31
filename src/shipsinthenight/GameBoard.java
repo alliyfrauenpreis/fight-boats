@@ -222,6 +222,38 @@ public class GameBoard {
          
     }
     
+    // updates GUI to deflect model
+    public void update(){
+        
+        for (int i = 0; i <= 9; i++){
+            
+            for (int j = 0; j <= 9; j++){
+                
+                // space occupied by ship
+                if ((int)boardValues.get(i).get(j) == 1)
+                    boardButtons[i][j].setBorder(new LineBorder(Color.CYAN, 2));
+                    
+                // space hit
+                else if ((int)boardValues.get(i).get(j) == -2){
+                    boardButtons[i][j].setBorder(new LineBorder(Color.RED, 1));
+                    boardButtons[i][j].setIcon(hitMarker);
+                }
+                    
+                // space miss
+                else if ((int)boardValues.get(i).get(j) == -1){
+                    boardButtons[i][j].setBorder(new LineBorder(Color.GRAY, 1));
+                    boardButtons[i][j].setIcon(missMarker);
+                }
+                    
+                // space empty
+                else
+                    boardButtons[i][j].setBorder(new LineBorder(new Color(1, 95, 156), 2));
+                    
+            }
+        }
+        
+    }
+    
     // prints representation of board to console; 1 for occupied, 0 for empty, -1 or -2 for sunk/hits
     void printDebugBoard(){
         

@@ -85,12 +85,12 @@ public class ShipsInTheNight {
         
         JPanel topMiddle = new JPanel();
         topMiddle.setBackground(new Color (1, 22, 49));
-        topMiddle.add(gameController.getOpponentBoardPanel());
+        topMiddle.add(gameController.otherBoard.boardPanel);
         
         
         JPanel bottomMiddle = new JPanel();
         bottomMiddle.setBackground(new Color (1, 22, 49));
-        bottomMiddle.add(gameController.getPlayerBoardPanel());
+        bottomMiddle.add(gameController.currentBoard.boardPanel);
         
         middle.add(topMiddle);
         middle.add(bottomMiddle);
@@ -119,6 +119,7 @@ public class ShipsInTheNight {
         
         options.quit.requestFocus();
         
+        PopupController.getInstance().launchPlacePiecesPopup();
     }
     
     public void returnToStartScreen(){

@@ -15,6 +15,7 @@ package shipsinthenight;
 
 import javax.swing.JPanel;
 import shipsinthenight.GameBoard;
+import static shipsinthenight.GameState.READY;
 import static shipsinthenight.GameState.SETUP;
 
 
@@ -26,12 +27,15 @@ public class GameController {
     
     private static GameController instance = null;
     
-    GameBoard playerBoard, opponentBoard;
+    GameBoard player1Board, player2Board, currentBoard, otherBoard;
     Position selected = null;
     PopupController popupController;
     ShipsInTheNight appController;
     GameState state = SETUP;
     int pieceToSetup = 0;
+    int currentPlayer = 1;
+    boolean player1Ready = false;
+    boolean player2Ready = false;
     
     public GameController(){
         
@@ -50,93 +54,75 @@ public class GameController {
     // setup a new game with dummy content for now, and two boards
     public void setupGame(ShipsInTheNight s){
         
-        playerBoard = new GameBoard();
-        opponentBoard = new GameBoard();
+        player1Board = new GameBoard();
+        player2Board = new GameBoard();
         popupController = new PopupController();
         appController = s;
+        
         Piece patrol = new Piece(shipsinthenight.pieceType.PATROL);
         Piece airCarrier = new Piece(shipsinthenight.pieceType.AIR_CARRIER);
         Piece battleship = new Piece(shipsinthenight.pieceType.BATTLESHIP);
         Piece destroyer = new Piece(shipsinthenight.pieceType.DESTROYER);
         Piece sub = new Piece(shipsinthenight.pieceType.SUB);
         
-       airCarrier.addPosition(new Position(5,8));  
-        airCarrier.addPosition(new Position(4,8));  
-       airCarrier.addPosition(new Position(3,8)); 
-        airCarrier.addPosition(new Position(2,8)); 
-       airCarrier.addPosition(new Position(1,8)); 
-       
-       patrol.addPosition(new Position(2,2));
-       patrol.addPosition(new Position(2,3));
-       
-       battleship.addPosition(new Position(7,1));
-       battleship.addPosition(new Position(7,2));
-       battleship.addPosition(new Position(7,3));
-       battleship.addPosition(new Position(7,4));
-       
-        playerBoard.addPiece(airCarrier);
-        playerBoard.addPiece(patrol);
-        playerBoard.addPiece(battleship);
         
-        Piece patrol2 = new Piece(shipsinthenight.pieceType.PATROL);
-        Piece airCarrier2 = new Piece(shipsinthenight.pieceType.AIR_CARRIER);
+        player1Board.addPiece(airCarrier);
+        player1Board.addPiece(patrol);
+        player1Board.addPiece(battleship);
+        player1Board.addPiece(destroyer);
+        player1Board.addPiece(sub);
         
-       airCarrier2.addPosition(new Position(5,8));  
-        airCarrier2.addPosition(new Position(4,8));  
-       airCarrier2.addPosition(new Position(3,8)); 
-        airCarrier2.addPosition(new Position(2,8)); 
-       airCarrier2.addPosition(new Position(1,8)); 
-       
-       patrol2.addPosition(new Position(2,2));
-       patrol2.addPosition(new Position(2,3));
-       
-       battleship.addPosition(new Position(7,1));
-       battleship.addPosition(new Position(7,2));
-       battleship.addPosition(new Position(7,3));
-       battleship.addPosition(new Position(7,4));
-       
-       
-        playerBoard.addPiece(airCarrier);
-        playerBoard.addPiece(patrol);
-        playerBoard.addPiece(battleship);
+        patrol = new Piece(shipsinthenight.pieceType.PATROL);
+        airCarrier = new Piece(shipsinthenight.pieceType.AIR_CARRIER);
+        battleship = new Piece(shipsinthenight.pieceType.BATTLESHIP);
+        destroyer = new Piece(shipsinthenight.pieceType.DESTROYER);
+        sub = new Piece(shipsinthenight.pieceType.SUB);
         
-        opponentBoard.addPiece(patrol2);
-        opponentBoard.addPiece(airCarrier2);
         
-        opponentBoard.hidePieces();
+        player2Board.addPiece(airCarrier);
+        player2Board.addPiece(patrol);
+        player2Board.addPiece(battleship);
+        player2Board.addPiece(destroyer);
+        player2Board.addPiece(sub);
         
-        playerBoard.printDebugBoard();
+
+        currentBoard = player1Board;
+        otherBoard = player2Board;
+        
+        otherBoard.hidePieces();
+        
+      //  playerBoard.printDebugBoard();
         
         
     }
     
     public JPanel getPlayerBoardPanel(){
         
-        return playerBoard.getBoard();
+        return currentBoard.getBoard();
     }
     
      public JPanel getOpponentBoardPanel(){
         
-        return opponentBoard.getBoard();
+        return otherBoard.getBoard();
     }
     
     public void sendAttack(){
         
         // get the selected position on the opponent board
-        Position target = opponentBoard.selected;
-        boolean sunk = opponentBoard.addHit(target);
+        Position target = otherBoard.selected;
+        boolean sunk = otherBoard.addHit(target);
         
         System.out.println("sending attack");
         
         // launch popup depending on result of attack
         if (sunk){
-            if (opponentBoard.win()){
+            if (otherBoard.win()){
                 popupController.launchWinPopup();
                 appController.returnToStartScreen();
             } else {
                 popupController.launchSinkPopup(target);
             }
-        } else if (opponentBoard.checkSpace(target) == 1){
+        } else if (otherBoard.checkSpace(target) == 1){
             popupController.launchHitPopup(target);
         } else {
             popupController.launchMissPopup(target);
@@ -162,19 +148,22 @@ public class GameController {
         switch (state) {
             
             case SETUP:
-                opponentBoard.enableBoard(false);
-                playerBoard.enableBoard(true);
+                otherBoard.enableBoard(false);
+                currentBoard.enableBoard(true);
+                otherBoard.hidePieces();
                 PiecesPanel.getInstance().enable();
                 break;
             case READY:
                 sendReadySignal();
                 PiecesPanel.getInstance().disable();
-                playerBoard.enableBoard(false);
-                opponentBoard.enableBoard(true);
+                otherBoard.enableBoard(false);
+                currentBoard.enableBoard(true);
                 break;
             case PLAYING:
-                opponentBoard.enableBoard(true);
-                playerBoard.enableBoard(false);
+                otherBoard.hidePieces();
+                otherBoard.enableBoard(true);
+                currentBoard.update();
+                currentBoard.enableBoard(false);
             default:
                 break;
                 
@@ -185,6 +174,83 @@ public class GameController {
         
         pieceToSetup = size;
         
+    }
+    
+    public void swapPlayers(){
+        
+       if (currentPlayer == 1){
+           currentBoard = player2Board;
+           otherBoard = player1Board;
+           currentPlayer = 2;
+       } else {
+           currentPlayer = 1;
+           currentBoard = player1Board;
+           otherBoard = player2Board;
+       }
+       
+       if (currentPlayer == 2 & !player2Ready){
+           
+           // swap to player 2 board
+           currentBoard = player2Board;
+           otherBoard = player1Board;
+           
+           currentBoard.update();
+           otherBoard.update();
+           
+           
+           // hide and disable other board; show and enable player 2 board;
+           setState(SETUP);
+          
+           PopupController.getInstance().launchPlacePiecesPopup();
+       }
+       
+       // they're both ready!
+       else {
+           
+           if (currentPlayer == 1){
+               
+               player2Board.hidePieces();
+               player1Board.enableBoard(false);
+               player2Board.enableBoard(true);
+               player1Board.update();
+               
+               
+           }
+           
+           else if (currentPlayer == 2){
+               
+               player1Board.hidePieces();
+               player2Board.enableBoard(false);
+               player1Board.enableBoard(true);
+               player2Board.update();
+               
+               
+           }
+           
+       }
+       
+       System.out.println("OTHER BOARD:");
+       otherBoard.printDebugBoard();
+       
+       
+       System.out.println("CURRENT BOARD:");
+       currentBoard.printDebugBoard();
+       
+       
+       System.out.println("P1 BOARD:");
+       player1Board.printDebugBoard();
+       
+       
+       
+       System.out.println("P2 BOARD:");
+       player2Board.printDebugBoard();
+       
+       
+       
+       
+       
+       
+       
     }
     
 }

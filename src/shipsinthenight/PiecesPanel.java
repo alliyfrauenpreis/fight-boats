@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
+import static shipsinthenight.pieceType.*;
 
 /**
  *
@@ -49,7 +50,13 @@ public class PiecesPanel {
         piecesPanel = new JPanel();
         pieceButtons = new ArrayList<JButton>();
         
-        ArrayList<Piece> pieces = GameController.getInstance().playerBoard.pieces;
+        ArrayList<Piece> pieces = new ArrayList<Piece>();
+        pieces.add(new Piece(AIR_CARRIER));
+        pieces.add(new Piece(BATTLESHIP));
+        pieces.add(new Piece(DESTROYER));
+        pieces.add(new Piece(SUB));
+        pieces.add(new Piece(PATROL));
+        
         
         for (Piece p : pieces){ 
             
@@ -66,6 +73,24 @@ public class PiecesPanel {
         
         GameController.getInstance().pieceToSetup = 5;
         piecesPanel.setBackground(new Color (1, 22, 49));
+    }
+    
+    
+    // update pieces to reflect set ones when switching players
+    public void update(GameBoard currentBoard){
+        
+        ArrayList<Piece> pieces = currentBoard.pieces;
+        
+        for (int i = 0; i < pieces.size(); i++){
+            
+            if (pieces.get(i).isSet()){
+                
+                pieceButtons.get(i).setEnabled(false);
+            } else {
+                
+                pieceButtons.get(i).setEnabled(true);
+            }
+        }
     }
     
     public JPanel getPanel(){

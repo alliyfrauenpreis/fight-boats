@@ -23,7 +23,7 @@ import shipsinthenight.GameBoard;
 public class OptionsPanel {
     
     JPanel panel;
-    JButton fire, quit, ready, set;
+    JButton fire, quit, ready, set, toggle;
     
     private static OptionsPanel instance = null;
     
@@ -52,10 +52,12 @@ public class OptionsPanel {
         ready = new JButton("Ready!");
         ready.addActionListener(new ReadyButtonListener());
         ready.setEnabled(false);
+        toggle = new JButton("Toggle who's turn it is");
+        toggle.addActionListener(new ToggleButtonListener());
         panel.add(fire);
         panel.add(quit);
         panel.add(ready);
-        
+        panel.add(toggle);
         
     }
     
@@ -74,6 +76,7 @@ class FireButtonListener implements ActionListener {
 
         // notify game controller
         GameController.getInstance().sendAttack();
+        GameController.getInstance().swapPlayers();
         
     }
     
@@ -109,10 +112,39 @@ class ReadyButtonListener implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        GameController.getInstance().setState(GameState.PLAYING);
+        if (GameController.getInstance().player1Ready){
+                GameController.getInstance().player2Ready = true;
+            } else {
+                GameController.getInstance().player1Ready = true;
+            }
+    
+    
+        if (GameController.getInstance().player1Ready && GameController.getInstance().player2Ready) {
+            
+            GameController.getInstance().setState(GameState.PLAYING);
+        } 
+        
+        GameController.getInstance().swapPlayers();
     }
     
     public ReadyButtonListener(){
+        
+       
+        
+    }
+}
+
+// toggles player turn, for debugging
+class ToggleButtonListener implements ActionListener{
+
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        
+        GameController.getInstance().swapPlayers();
+    }
+    
+    public ToggleButtonListener(){
         
        
         
