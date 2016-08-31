@@ -549,7 +549,7 @@ public class GameBoard {
         else if (last.column > initial.column) {
             System.out.println("last column > initial column");
             
-            for (int i = 1; i < pieceSize; i++){
+            for (int i = 1; i < pieceSize-1; i++){
                 
                 activePiece.addPosition(new Position(initial.row, initial.column + i));
             }

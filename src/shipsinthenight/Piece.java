@@ -111,7 +111,7 @@ public class Piece {
     public boolean isSet(){
         
        System.out.println("position size is " + position.size() + " and size is " + size);
-        if (position.size() >= size){
+        if (position.size() == size){
             
             return true;
             
